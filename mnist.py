@@ -9,7 +9,7 @@ from spsb_diff import spsb_diff
 from torchmetrics import Accuracy
 from torchvision import datasets, transforms
 from torchmetrics import Accuracy
-from tqdm import trange, tqdm
+from tqdm import trange
 
 from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler(feature_range=(0, 2*np.pi))
@@ -79,7 +79,7 @@ def circuit(inputs, weights):
             qml.CRZ(layer_params[i], wires=[i, (i+1)%N_QUBITS])
         for i in range(N_QUBITS):
             qml.Hadamard(wires=i)
-    
+
     return [qml.expval(qml.PauliZ(i)) for i in range(N_QUBITS)]
 
 class Model(nn.Module):
@@ -106,7 +106,7 @@ class Model(nn.Module):
                 q_results = self.quanv(data)
 
                 data_list.append(q_results.view(bsz, 4))
-        
+
         x = torch.cat(data_list, dim=1).float()
 
         x = torch.flatten(x, start_dim=1)
@@ -161,7 +161,7 @@ def get_losses(LEARNING_RATE):
                 data = data.squeeze().to(DEVICE)
                 target = target.to(DEVICE)
                 out = model(data)
-                
+
                 l = loss(out, target)
                 losses.append(l.item())
 
@@ -176,7 +176,7 @@ def get_losses(LEARNING_RATE):
             avg_accs.append(running_acc / len(trainloader.dataset))
 
             print(f"Epoch {epoch+1}/{N_EPOCHS}")
-        
+
         losses_all.append(losses)
         accs_all.append(avg_accs)
         evals_all.append(circuit_evals)

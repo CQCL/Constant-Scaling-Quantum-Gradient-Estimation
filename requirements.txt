@@ -1,0 +1,10 @@
+pennylane==0.27.0
+qujax==0.3.0
+pytket==1.9.0
+pytket-qujax==0.10.0
+lambeq==0.2.7
+scikit-learn
+matplotlib
+numpy
+torchmetrics
+torchvision

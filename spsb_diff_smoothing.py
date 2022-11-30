@@ -8,10 +8,7 @@ import warnings
 
 @gradient_transform
 def spsb_diff(tape: qml.tape, argnum=None, epsilon=0.01, smoothing=5):
-    """This is the SPSB differentiator. TODO: We might want to implement
-    smoothing here.
-    
-    """
+    """This is the SPSB differentiator with additional Jacobian smoothing."""
 
     if argnum is None and not tape.trainable_params:
         warnings.warn(
@@ -33,7 +30,7 @@ def spsb_diff(tape: qml.tape, argnum=None, epsilon=0.01, smoothing=5):
     gradient_tapes = generate_multishifted_tapes(
         tape,
         indices = range(len(tape.trainable_params)),
-        shifts = shifts_plus + shifts_minus          
+        shifts = shifts_plus + shifts_minus
     )
 
     def processing_fn(results):
@@ -41,15 +38,15 @@ def spsb_diff(tape: qml.tape, argnum=None, epsilon=0.01, smoothing=5):
             not isinstance(tape._qfunc_output, Sequence)):
             results = [qml.math.squeeze(res) for res in results]
             grad = np.zeros((tape.output_dim, len(tape.trainable_params)))
-            
+
             for i in range(smoothing):
                 f_prime = results[i] - results[i+len(results)//2]    # len(results) is always even
                 if f_prime.shape == ():
                     f_prime = qml.numpy.expand_dims(f_prime, axis=0)
-            
+
                 grad += qml.numpy.einsum('m,n->mn', f_prime, 1/(2*epsilon*shifts[i]))
-        
-        grad /= smoothing 
+
+        grad /= smoothing
         return grad
 
     return gradient_tapes, processing_fn
