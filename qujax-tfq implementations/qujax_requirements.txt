@@ -1,0 +1,6 @@
+qujax==0.3.0
+pytket==1.9.0
+pytket-qujax==0.10.0
+scikit-learn
+lambeq
+jupyter
