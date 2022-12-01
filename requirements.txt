@@ -3,6 +3,8 @@ qujax==0.3.0
 pytket==1.9.0
 pytket-qujax==0.10.0
 lambeq==0.2.7
+tensorflow==2.4.1
+tensorflow-quantum==0.7.2
 scikit-learn
 matplotlib
 numpy
